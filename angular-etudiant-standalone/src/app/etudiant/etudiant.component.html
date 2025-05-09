@@ -1,0 +1,39 @@
+<div class="container">
+    <div class="card shadow mb-4">
+    <div class="card-body">
+    <table class="table table-striped">
+    <thead>
+    <tr>
+    <th>Liste des étudiants </th>
+    </tr>
+    <tr>
+    <th>ID</th>
+    <th>Nom</th>
+    <th>Prénom</th>
+    <th>CIN</th>
+    <th>Date de naissance</th>
+    <th>Groupe</th>
+    <th>Institut</th>
+    <th>Email</th>
+    </tr>
+    </thead>
+    <tbody *ngFor="let etudiant of etudiant">
+    <tr >
+    <td>{{etudiant.id}}</td>
+    <td>{{etudiant.nom}}</td>
+    <td>{{etudiant.prenom}}</td>
+    <td>{{etudiant.cin}}</td>
+    <td>{{etudiant.dateNaissance  | date:'dd/MM/yyyy'}}</td>
+    <td>{{etudiant.classe}}</td>
+    <td>{{etudiant.institut?.nomI}}</td>
+    <td>{{etudiant.email}}</td>
+
+    <td><a class="btn btn-danger" (click)="supprimerEtudiant(etudiant)"  *ngIf="authService.isAdmin()">Supprimer</a></td>
+    <td><a class="btn btn-success" [routerLink]="['/updateEtud',etudiant.id]"  *ngIf="authService.isAdmin()">Modifier</a></td>
+
+    </tr>
+    </tbody>
+    </table>
+    </div>
+    </div>
+    </div>

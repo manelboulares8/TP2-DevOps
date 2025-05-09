@@ -1,0 +1,39 @@
+<div class="container">
+    <div class="col-sm-4 col-md-4 col-lg-4 mb-4"> 
+           <app-update-institut
+           [institut]="updatedInstitut"
+           (categorieUpdated)="categorieUpdated=$event;institutUpdated(categorieUpdated)"
+           [ajout]="ajout"
+           >
+         </app-update-institut> 
+       </div>
+       <div class="card shadow mb-4">
+         <div class="card-body">
+           <table class="table table-striped">
+             <thead>
+               <tr> 
+                 <th>Id</th>
+                 <th>Nom Institut</th>
+                 <th>Localisation</th>
+                 <th>Num téléphone</th> 
+               </tr>
+             </thead>
+             <tbody>
+               <tr *ngFor="let institut of instituts">
+                   <td>{{institut.idI}}</td>
+                   <td>{{institut.nomI}}</td>
+                   <td>{{institut.localisation}}</td>
+                   <td>{{institut.numTlf}}</td>
+   
+                 
+                 <!-- <td><a class="btn btn-success"  (click)="updateInstitut(institut)">Modifier</a></td> -->
+                 <button type="submit" [disabled]="!institut.nomI" class="btn btn-success"
+                 (click)="updateInstitut(institut)" >Editer
+                 </button>
+               </tr>
+             </tbody>
+           </table>
+         </div>
+       </div>
+     </div>
+     

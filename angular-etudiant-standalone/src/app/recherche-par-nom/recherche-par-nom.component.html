@@ -1,0 +1,48 @@
+<div class="container">
+    
+   
+    <!--- <form class="form-inline">
+  <div class="form-group mx-sm-3 mb-2 mt-2 ">
+  <label>Nom de l'étudiant en tapant :</label>
+  <input class="form-control" #searchTerm (keyup)="onKeyUp(searchTerm.value)">
+  </div>
+  </form>-->
+  <form class="form-inline">
+      <div class="form-group mx-sm-3 mb-2 mt-2 ">
+      <label>Nom de l'étudiant </label>
+      <input type="text" class="form-control" [(ngModel)]="nom" name="nom" class="form-control" >
+      <button type="submit" (click)="rechercherEtud()" class="btn btn-primary mb-2 ml-2">Rechercher</button>
+      </div>
+      </form>
+      <div class="card shadow mb-4">
+      <div class="card-body">
+      <table class="table table-striped">
+          <thead>
+              <tr>
+              <th>Liste des étudiants </th>
+              </tr>
+              <tr><th>Nom</th>
+              <th>Prénom</th>
+              <th>CIN</th>
+              <th>Date de naissance</th>
+              <th>Groupe</th>
+              <th>Institut</th>
+              </tr>
+          </thead>
+              
+              <!-- <tbody *ngFor="let etudiant of etudiant | searchFilter:searchTerm"> -->
+                 <tbody *ngFor="let etudiant of etudiant ">
+  
+  
+                  <tr >
+                  <td>{{etudiant.nom}}</td>
+                  <td>{{etudiant.prenom}}</td>
+                  <td>{{etudiant.cin}}</td>
+                  <td>{{etudiant.dateNaissance  | date:'dd/MM/yyyy'}}</td>
+                  <td>{{etudiant.classe}}</td>
+                  <td>{{etudiant.institut?.nomI}}</td>
+              </tr>
+              </tbody>
+              </table>
+              </div>
+              </div>

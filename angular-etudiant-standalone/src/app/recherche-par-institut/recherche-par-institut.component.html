@@ -1,0 +1,45 @@
+<div class="container">
+    <div class="col-sm-4 col-md-4 col-lg-4 mb-4">
+        <label>Institut </label>
+        <select class="form-control form-control-lg" id="idI" name="idI"
+        [(ngModel)]="idI" (change)="onChange()">
+        
+        <option *ngFor="let ins of instituts" value="{{ins.idI}}">
+        {{ins.nomI}}
+        </option>
+        </select>
+        </div>
+    
+    <div class="card shadow mb-4">
+    <div class="card-body">
+    <table class="table table-striped">
+    <thead>
+    <tr>
+    <th>Liste des étudiants </th>
+    </tr>
+    <tr><th>Nom</th>
+    <th>Prénom</th>
+    <th>CIN</th>
+    <th>Date de naissance</th>
+    <th>Groupe</th>
+    <th>Institut</th>
+    </tr>
+    </thead>
+    <tbody *ngFor="let etudiant of etudiant">
+    <tr >
+    <td>{{etudiant.nom}}</td>
+    <td>{{etudiant.prenom}}</td>
+    <td>{{etudiant.cin}}</td>
+    <td>{{etudiant.dateNaissance  | date:'dd/MM/yyyy'}}</td>
+    <td>{{etudiant.classe}}</td>
+    <td>{{etudiant.institut?.nomI}}</td>
+
+    <!-- <td><a class="btn btn-danger" (click)="supprimerEtudiant(etudiant)">Supprimer</a></td>
+    <td><a class="btn btn-success" [routerLink]="['/updateEtud',etudiant.cin]">Modifier</a></td> -->
+
+    </tr>
+    </tbody>
+    </table>
+    </div>
+    </div>
+    </div>
