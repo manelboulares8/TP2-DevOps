@@ -26,12 +26,35 @@ export class InstitutService  {
         
     ];
     constructor(private authService:AuthService,private http :HttpClient){}
-    apiURL: string = 'http://localhost:8082/etudiant2/ins';
+    apiURL: string = 'http://localhost:8082/etudiant2/api/ins';
 
-    listeInstituts(): Observable<Institut[]> {
-      let jwt = this.authService.getToken();
-      //  jwt = "Bearer "+jwt;
-        let httpHeaders = new HttpHeaders({"Authorization":jwt}) 
-    return this.http.get<Institut[]>(this.apiURL+"/allIns",{headers:httpHeaders});
-      }
+listeInstituts(): Observable<Institut[]> {
+    const jwt = this.authService.getToken(); // Obtenir le token d'authentification
+    const httpHeaders = new HttpHeaders({ 'Authorization': jwt });
+
+    return this.http.get<Institut[]>(`${this.apiURL}/allIns`, { headers: httpHeaders });
+  }
+private getAuthHeaders(): HttpHeaders {
+    const token = this.authService.getToken();
+    return new HttpHeaders({ 'Authorization':  token });
+  }
+
+  ajouterInstitut(institut: Institut): Observable<Institut> {
+      const jwt = this.authService.getToken(); // Obtenir le token d'authentification
+    const httpHeaders = new HttpHeaders({ 'Authorization': jwt });
+    console.log("m hereeeeeeeeeeeeee")
+    return this.http.post<Institut>(`http://localhost:8082/etudiant2/api/ins/addInstitut`, institut, {headers:httpHeaders });
+  }
+
+  supprimerInstitut(id: number): Observable<void> {
+       const jwt = this.authService.getToken(); // Obtenir le token d'authentification
+    const httpHeaders = new HttpHeaders({ 'Authorization': jwt });
+    return this.http.delete<void>(`${this.apiURL}/${id}`,{headers:httpHeaders });
+  }
+  updateInstitut(institut: Institut): Observable<Institut> {
+      const jwt = this.authService.getToken(); // Obtenir le token d'authentification
+    const httpHeaders = new HttpHeaders({ 'Authorization': jwt });
+  const url = `${this.apiURL}/${institut.idI}`;
+  return this.http.put<Institut>(`http://localhost:8082/etudiant2/api/ins`, institut, {headers:httpHeaders });
+}
 }

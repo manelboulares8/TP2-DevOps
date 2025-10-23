@@ -1,5 +1,5 @@
 export class Institut {
-    idI!: number;
+    idI?: number;
     nomI? :string;
     localisation? :string;
     numTlf ? :number;

@@ -80,6 +80,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { InstitutWrapper } from '../model/institutWrapped.model';
 import { CommonModule } from '@angular/common';
 import { ServicesComponent } from '../services/services.component';
+import { InstitutService } from '../services/institut.Service';
 
 @Component({
   selector: 'app-update-etud',
@@ -100,9 +101,10 @@ export class UpdateEtudComponent implements OnInit{
   updatedInsI!:any;
   myForm! :FormGroup;
   newEtudiant =new Etudiant();
+  instituts!: Institut[];
   constructor (private activatedRoute: ActivatedRoute,
     private router:Router,
-    private servicesComponent: ServicesComponent,private formBuilder :FormBuilder
+    private servicesComponent: ServicesComponent,private formBuilder :FormBuilder,private institutService:InstitutService
   ){
 
   }
@@ -237,11 +239,15 @@ this.myForm = this.formBuilder.group({
 
        
       } )
-      this.servicesComponent.listeInstituts().subscribe(ins => {
-        // Vous accédez à l'array des instituts dans la réponse
-        this.institut = ins._embedded.instituts;
-        console.log("institut",this.institut); // Afficher la liste dans la console pour déboguer
-      });
+      this.institutService.listeInstituts().subscribe(
+      (instituts: Institut[]) => {
+        this.instituts = instituts;  // Affectation à la variable
+        console.log(this.instituts);  // Affichage dans la console pour débogage
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des instituts', error);
+      }
+    );
     }// Remplir `newEtudiant` avec les données récupérées
       
   
@@ -283,7 +289,7 @@ updateEtud(){
 
 
   
- this.currentEtudiant.institut=this.institut.find(ins=>ins.idI==this.updatedInsI)!;
+ this.currentEtudiant.institut=this.instituts.find(ins=>ins.idI==this.updatedInsI)!;
  this.servicesComponent.updateEtudiant(this.currentEtudiant).subscribe(etudiant=>{
   this.router.navigate(['etudiant']);}
  );

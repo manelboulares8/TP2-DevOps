@@ -96,25 +96,32 @@ let httpHeaders = new HttpHeaders({"Authorization":jwt})
     }
     }); */
     //}
-    supprimerEtudiant(e: Etudiant): Observable<any> {
-      // Assurez-vous que l'ID de l'étudiant est valide
-      if (!e || !e.id) {
-        console.error("ID de l'étudiant invalide");
-        return new Observable(); // Retourne une Observable vide en cas d'erreur
-      }
-      
-      const url = `${this.apiURL}/${e.id}`; // Utilise l'ID de l'étudiant
-      return this.http.delete(url, httpOptions); // Envoie la requête DELETE
-    }
-    
+   supprimerEtudiant(e: Etudiant): Observable<any> {
+  let jwt = this.authService.getToken();
+  let httpHeaders = new HttpHeaders({ "Authorization": jwt });
+  
+  // Assurez-vous que l'ID de l'étudiant est valide
+  if (!e || !e.id) {
+    console.error("ID de l'étudiant invalide");
+    return new Observable(); // Retourne une Observable vide en cas d'erreur
+  }
+
+  const url = `http://localhost:8082/etudiant2/api/deleteetud/${e.id}`; // Utilise l'ID de l'étudiant
+  const httpOptions = { headers: httpHeaders }; // Ajoute les headers aux options HTTP
+
+  return this.http.delete(url, httpOptions); // Envoie la requête DELETE avec les options
+}
+
   
   /*consulterEtud(cin:number):Etudiant{
     return   this.etudiantt = this.etudiant.find(e => e.cin == cin)!;
    
     }*/
    consulterEtud(id :number):Observable<Etudiant>{
-    const url=`${this.apiURL}/${id}`;
-    return this.http.get<Etudiant>(url);
+     let jwt = this.authService.getToken();
+        let httpHeaders = new HttpHeaders({ "Authorization": jwt });
+    const url=`http://localhost:8082/etudiant2/api/getbyid/${id}`;
+    return this.http.get<Etudiant>(url, { headers: httpHeaders });
    }
     trierEtudiants(){
       this.etudiant = this.etudiant.sort((n1,n2) => {
@@ -136,7 +143,9 @@ let httpHeaders = new HttpHeaders({"Authorization":jwt})
       {
       //return this.http.put<Etudiant>(this.apiURL, prod, httpOptions);
     //  const url = `${this.apiURL}/${prod.id}`; // Inclut l'ID dans l'URL
-  return this.http.put<Etudiant>(this.apiURL, prod, httpOptions);
+     let jwt = this.authService.getToken();
+        let httpHeaders = new HttpHeaders({ "Authorization": jwt });
+  return this.http.put<Etudiant>('http://localhost:8082/etudiant2/api/updateetud', prod,  { headers: httpHeaders });
       }
 
 
@@ -146,9 +155,8 @@ let httpHeaders = new HttpHeaders({"Authorization":jwt})
   
 
       listeInstituts(): Observable<InstitutWrapper> {
-        let jwt = this.authService.getToken();
-        let httpHeaders = new HttpHeaders({ "Authorization": jwt });
-        return this.http.get<InstitutWrapper>(this.apiURLIns + "/allIns", { headers: httpHeaders });
+       
+        return this.http.get<InstitutWrapper>(this.apiURLIns + "/allIns");
       }
       
      /* listeInstituts():Observable<Institut[]>{
@@ -179,17 +187,22 @@ let httpHeaders = new HttpHeaders({"Authorization":jwt})
         }*/
        
           ajouterInstitut(cat: Institut):Observable<Institut>{
+            
             return this.http.post<Institut>(this.apiURLIns, cat, httpOptions);
             }
 
             rechercherParNom(nom: string):Observable< Etudiant[]> {
+                let jwt = this.authService.getToken();
+        let httpHeaders = new HttpHeaders({ "Authorization": jwt });
               const url = `${this.apiURL}/etud/${nom}`;
-              return this.http.get<Etudiant[]>(url);
+              return this.http.get<Etudiant[]>(url,{ headers: httpHeaders });
               }
 
               rechercherParInstitut(idI: number):Observable<Etudiant[]> {
+                 let jwt = this.authService.getToken();
+        let httpHeaders = new HttpHeaders({ "Authorization": jwt });
                 const url = `${this.apiURL}/etudsIns/${idI}`;
-                return this.http.get<Etudiant[]>(url);
+                return this.http.get<Etudiant[]>(url,{ headers: httpHeaders });
                 }
               
 }

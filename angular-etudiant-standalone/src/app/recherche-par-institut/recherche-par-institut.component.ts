@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ServicesComponent } from '../services/services.component';
+import { InstitutService } from '../services/institut.Service';
 
 @Component({
   selector: 'app-recherche-par-institut',
@@ -25,17 +26,22 @@ export class RechercheParInstitutComponent implements OnInit {
   instituts! :Institut[];
   nomInstitut! :String;
   idI! :number;
-  constructor(private serviceComponent : ServicesComponent){
+  constructor(private serviceComponent : ServicesComponent, private institutService:InstitutService){
   
   }
   ngOnInit(): void {
     
    // this.etudiant=this.serviceComponent.listeEtudiant();
 
-    this.serviceComponent.listeInstituts().
-    subscribe(cats => {this.instituts = cats._embedded.instituts;
-    console.log(cats);
-    });
+    this.institutService.listeInstituts().subscribe(
+      (instituts: Institut[]) => {
+        this.instituts = instituts;  // Affectation à la variable
+        console.log(this.instituts);  // Affichage dans la console pour débogage
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des instituts', error);
+      }
+    );
     }
     onChange() {
       this.serviceComponent.rechercherParInstitut(this.idI).

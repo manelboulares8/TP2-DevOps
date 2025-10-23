@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { CommonModule } from '@angular/common';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,CommonModule],
+  imports: [RouterOutlet,CommonModule,RouterLink,        // Ajouté
+    RouterLinkActive],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

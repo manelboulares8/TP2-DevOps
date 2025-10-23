@@ -5,6 +5,7 @@ import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModu
 import { ServicesComponent } from '../services/services.component';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { InstitutService } from '../services/institut.Service';
 
 @Component({
   selector: 'app-add-etudiant',
@@ -22,21 +23,22 @@ export class AddEtudiantComponent implements OnInit {
   newIdI! :number;
 
 
-  constructor(private serviceComponent :ServicesComponent,private router:Router,private formBuilder :FormBuilder){
+  constructor(private serviceComponent :ServicesComponent,private router:Router,private formBuilder :FormBuilder,private institutService: InstitutService){
 
   }
 
   ngOnInit(): void {
-  /* this.institut =this.serviceComponent.listeInstituts();
-    this.serviceComponent.listeInstituts().subscribe(ins=>{this.institut=ins._embedded.instituts;
-    console.log(ins);});*/
-
-    this.serviceComponent.listeInstituts().subscribe(ins => {
-      // Vous accédez à l'array des instituts dans la réponse
-      this.institut = ins._embedded.instituts;
-      console.log("institut",this.institut); // Afficher la liste dans la console pour déboguer
-    });
-    
+    // Appel au service pour récupérer la liste des instituts
+    this.institutService.listeInstituts().subscribe(
+      (instituts: Institut[]) => {
+        this.institut = instituts;  // Affectation à la variable
+        console.log(this.institut);  // Affichage dans la console pour débogage
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des instituts', error);
+      }
+    );
+  
    
 
 

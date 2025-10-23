@@ -131,7 +131,7 @@
       <div class="form-group">
         <label>Institut :</label>
         <select class="form-control form-control-lg" id="nomI" formControlName="institut" [(ngModel)]="updatedInsI">
-          <option *ngFor="let ins of institut" [value]="ins.idI" >
+          <option *ngFor="let ins of instituts" [value]="ins.idI" >
             {{ ins.nomI }}
           </option>
         </select>

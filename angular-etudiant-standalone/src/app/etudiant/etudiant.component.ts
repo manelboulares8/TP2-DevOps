@@ -3,10 +3,11 @@ import { Etudiant } from '../model/etudiant.model';
 import { ServicesComponent } from '../services/services.component';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-etudiant',
-  imports: [CommonModule], // <-- Add this
+  imports: [CommonModule,RouterModule], // <-- Add this
 
   templateUrl: './etudiant.component.html',
   styleUrl: './etudiant.component.css'

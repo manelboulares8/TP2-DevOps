@@ -18,7 +18,8 @@ import { RouterModule } from '@angular/router';
 })
 export class UpdateInstitutComponent implements OnInit{
   @Input()  institut! : Institut;
-  @Input() ajout!:any;
+ // @Input() ajout!:any;
+  @Input() ajout: boolean = true;
 
   @Output() categorieUpdated = new EventEmitter<Institut>();
   

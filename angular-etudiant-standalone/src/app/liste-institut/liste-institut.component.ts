@@ -1,59 +1,52 @@
 import { Component, OnInit } from '@angular/core';
 import { Institut } from '../model/institut.model';
-import { ServicesComponent } from '../services/services.component';
-import { InstitutWrapper } from '../model/institutWrapped.model';
 import { InstitutService } from '../services/institut.Service';
 import { CommonModule } from '@angular/common';
+import { UpdateInstitutComponent } from '../update-institut/update-institut.component';
+import { ServicesComponent } from '../services/services.component';
 
 @Component({
   selector: 'app-liste-institut',
-  imports: [CommonModule], // <-- Add this
-
   templateUrl: './liste-institut.component.html',
-  styleUrl: './liste-institut.component.css'
+  styleUrls: ['./liste-institut.component.css'],
+  imports: [CommonModule,UpdateInstitutComponent], 
 })
-export class ListeInstitutComponent implements OnInit{
+export class ListeInstitutComponent implements OnInit {
+  instituts!: Institut[]; // Liste des instituts récupérés
+
+  constructor(private institutService: InstitutService,private serviceComponent : ServicesComponent ) {}
   public categorieUpdated!:any
  
- instituts!:Institut[];  // Liste des types
    updatedInstitut: Institut = { idI: 0, nomI: "",localisation:"",numTlf:0 };  // Type à mettre à jour
    ajout: boolean = true;  // Mode ajout ou modification
    currentId: number = 0;
- 
-   constructor(private institutService: InstitutService,private serviceComponent : ServicesComponent  )  { }
- 
-   ngOnInit(): void {
-     /*this.serviceComponent.listeInstituts().subscribe(cats => {this.instituts= cats._embedded.instituts;
- console.log(cats);
- });*/
- this.serviceComponent.listeInstituts().subscribe(
-  (wrapper: InstitutWrapper) => {
-    console.log(wrapper); // Vérifie la structure de la réponse (doit contenir _embedded)
-    
-    // Extraire le tableau des instituts de _embedded
-    this.instituts = wrapper._embedded.instituts;
-    console.log(this.instituts); // Vérifie que le tableau est correctement extrait
-  },
-  (error) => {
-    console.error('Erreur lors de la récupération des instituts', error); // Gestion des erreurs
+  ngOnInit(): void {
+    // Appel au service pour récupérer la liste des instituts
+    this.institutService.listeInstituts().subscribe(
+      (instituts: Institut[]) => {
+        this.instituts = instituts;  // Affectation à la variable
+        console.log(this.instituts);  // Affichage dans la console pour débogage
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des instituts', error);
+      }
+    );
   }
-);
- }
-   
- 
    chargerInstituts() {
-    /* this.institutService.listeInstituts().subscribe(instituts => {
-       this.instituts = instituts;  // Remplir la liste des types avec les données du service
-       console.log(this.instituts);  // Afficher dans la console pour vérification
-       if (this.instituts.length > 0) {
-         this.currentId = Math.max(...this.instituts.map(type => type.idI));
-       }
-     });*/
-     this.serviceComponent.listeInstituts().
- subscribe(cats => {this.instituts = cats._embedded.instituts;
- console.log(cats);
- });
-   }
+  this.institutService.listeInstituts().subscribe(
+    (instituts: Institut[]) => {
+      this.instituts = instituts;
+      console.log(this.instituts);
+      if (this.instituts.length > 0) {
+        this.currentId = Math.max(...this.instituts.map(i => i.idI!));
+      }
+    },
+    (error) => {
+      console.error("Erreur lors du chargement des instituts :", error);
+    }
+  );
+}
+
  
    updateInstitut(institut: Institut) {
    /*  this.updatedInstitut = { ...institut };  // Copier les données du type à modifier
@@ -80,10 +73,41 @@ export class ListeInstitutComponent implements OnInit{
          }
        }
    }*/
-       institutUpdated(cat:Institut){
-         console.log("Ins updated event",cat);
-         this.serviceComponent.ajouterInstitut(cat).
-          subscribe( ()=> this.chargerInstituts());
-         }
- }
- 
+       institutUpdated(cat: Institut) {
+  console.log("Ins updated event", cat);
+  
+  if (this.ajout) {
+    // Mode ajout => POST
+    this.institutService.ajouterInstitut({
+      ...cat,
+      idI: undefined // éviter d'envoyer l'ID au backend
+    }).subscribe(() => {
+      this.chargerInstituts();
+    });
+  } else {
+    // Mode modification => PUT
+    this.institutService.updateInstitut(cat).subscribe(() => {
+      this.chargerInstituts();
+      this.ajout = true; // repasser en mode ajout
+      this.updatedInstitut = { idI: 0, nomI: "", localisation: "", numTlf: 0 };
+    });
+  }
+}
+
+
+   supprimerInstitut(id: number): void {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet institut ?')) {
+      this.institutService.supprimerInstitut(id).subscribe(() => {
+        this.instituts = this.instituts.filter(institut => institut.idI !== id);  // Supprimer de la liste
+      });
+    }
+  }  
+  modifierInstitut(institut: Institut): void {
+  this.institutService.updateInstitut(institut).subscribe(() => {
+    this.chargerInstituts(); // Recharge la liste après la mise à jour
+    this.ajout = true; // Revenir au mode "ajout"
+    this.updatedInstitut = { idI: 0, nomI: "", localisation: "", numTlf: 0 }; // Réinitialiser le formulaire
+  });
+}
+
+}
